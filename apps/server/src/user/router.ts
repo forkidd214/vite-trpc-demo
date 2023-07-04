@@ -5,21 +5,21 @@ import { router, publicProcedure } from '../trpc'
 import { users } from './db'
 
 export const userRouter = router({
-  getUsers: publicProcedure.query(() => {
+  list: publicProcedure.query(() => {
     return users
   }),
 
-  getUserById: publicProcedure.input(z.string()).query(async (opts) => {
+  byId: publicProcedure.input(z.string()).query(async (opts) => {
     const { input } = opts
     const foundUser = users.find((user) => user.id === input)
     if (foundUser) return foundUser
     throw new Error(`User of {id:'${input}'} not found`)
   }),
 
-  createUser: publicProcedure
+  create: publicProcedure
     .input(
       z.object({
-        name: z.string(),
+        name: z.string().trim().min(1, 'Name should be filled in'),
       })
     )
     .mutation((opts) => {
@@ -32,11 +32,11 @@ export const userRouter = router({
       return users.at(-1)
     }),
 
-  updateUser: publicProcedure
+  update: publicProcedure
     .input(
       z.object({
         id: z.string(),
-        name: z.string(),
+        name: z.string().trim().min(1, 'Name should be filled in'),
       })
     )
     .mutation((opts) => {
@@ -51,7 +51,7 @@ export const userRouter = router({
       throw new Error(`User of {id:'${id}'} not found`)
     }),
 
-  deleteUser: publicProcedure
+  delete: publicProcedure
     .input(
       z
         .object({
