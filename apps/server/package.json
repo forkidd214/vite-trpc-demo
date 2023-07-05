@@ -8,6 +8,7 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "preview": "node dist/index.js",
+    "lint": "eslint src --ext ts",
     "tsc": "pnpm exec tsc"
   },
   "keywords": [],
